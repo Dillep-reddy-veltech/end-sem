@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End Semester Exam Schedule</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3f7;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .exam-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .exam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .exam-card.active {
+            border-left: 5px solid var(--accent);
+        }
+        
+        .exam-card.next {
+            border-left: 5px solid var(--success);
+        }
+        
+        .exam-date {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .exam-subject {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .countdown {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .countdown-icon {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .days-left {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .days-left strong {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+        
+        .progress-container {
+            margin-top: 40px;
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .progress-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            width: 0;
+            transition: width 1s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .current-date {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .gap-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        .exam-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .status-upcoming {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status-current {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .status-completed {
+            background-color: #e9ecef;
+            color: #666;
+        }
+        
+        .status-missed {
+            background-color: var(--danger);
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>End Semester Exam Schedule</h1>
+            <div class="subtitle">May - June 2025</div>
+        </header>
+        
+        <div class="current-date" id="current-date">
+            <!-- Filled by JavaScript -->
+        </div>
+        
+        <div class="exam-grid" id="exam-grid">
+            <!-- Filled by JavaScript -->
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-title">Exam Progress</div>
+            <div class="progress-bar">
+                <div class="progress" id="exam-progress"></div>
+            </div>
+            <div class="progress-text">
+                <span>First Exam: May 12</span>
+                <span id="progress-percent">0%</span>
+                <span>Last Exam: May 30</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exam data
+        const exams = [
+            { date: '2025-05-12', subject: 'Big Data Analytics' },
+            { date: '2025-05-14', subject: 'Compiler Design' },
+            { date: '2025-05-16', subject: 'Modeling for Data Science' },
+            { date: '2025-05-21', subject: 'MPMC' },
+            { date: '2025-05-23', subject: 'Software Engineering' },
+            { date: '2025-05-28', subject: 'Machine Learning Techniques' },
+            { date: '2025-05-30', subject: 'Project Management and Finance' }
+        ];
+        
+        // DOM elements
+        const examGrid = document.getElementById('exam-grid');
+        const currentDateEl = document.getElementById('current-date');
+        const examProgress = document.getElementById('exam-progress');
+        const progressPercent = document.getElementById('progress-percent');
+        
+        // Format date as "DD MonthName" (e.g., "12 May")
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { day: 'numeric', month: 'long' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Calculate days between two dates
+        function daysBetween(date1, date2) {
+            const oneDay = 24 * 60 * 60 * 1000;
+            return Math.round(Math.abs((date1 - date2) / oneDay));
+        }
+        
+        // Calculate gap between consecutive exams
+        function calculateGaps() {
+            const gaps = [];
+            for (let i = 1; i < exams.length; i++) {
+                const prevDate = new Date(exams[i-1].date);
+                const currDate = new Date(exams[i].date);
+                gaps.push(daysBetween(prevDate, currDate));
+            }
+            return gaps;
+        }
+        
+        // Update the UI with current date and exam status
+        function updateUI() {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const gaps = calculateGaps();
+            
+            // Format current date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateEl.textContent = now.toLocaleDateString('en-US', options);
+            
+            // Clear exam grid
+            examGrid.innerHTML = '';
+            
+            // Find the next upcoming exam
+            let nextExam = null;
+            let completedExams = 0;
+            let totalExams = exams.length;
+            
+            // Process each exam
+            exams.forEach((exam, index) => {
+                const examDate = new Date(exam.date);
+                const daysDiff = daysBetween(examDate, now);
+                let status = '';
+                let statusClass = '';
+                let cardClass = '';
+                let gapText = '';
+                
+                // Calculate gap text for exams after the first one
+                if (index > 0) {
+                    const gapDays = gaps[index-1];
+                    gapText = `<div class="gap-info">${gapDays} day${gapDays !== 1 ? 's' : ''} since previous exam</div>`;
+                }
+                
+                if (exam.date < todayStr) {
+                    status = 'Completed';
+                    statusClass = 'status-completed';
+                    completedExams++;
+                } else if (exam.date === todayStr) {
+                    status = 'Today';
+                    statusClass = 'status-current';
+                    cardClass = 'active';
+                    nextExam = exam;
+                } else if (!nextExam && exam.date > todayStr) {
+                    status = 'Upcoming';
+                    statusClass = 'status-upcoming';
+                    cardClass = 'next';
+                    nextExam = exam;
+                } else {
+                    status = 'Upcoming';
+                    statusClass = 'status-upcoming';
+                }
+                
+                // Special case: Mark missed exam (May 23 Software Engineering)
+                if (exam.date === '2025-05-23' && todayStr > exam.date) {
+                    status = 'Missed';
+                    statusClass = 'status-missed';
+                }
+                
+                // Create exam card
+                const examCard = document.createElement('div');
+                examCard.className = `exam-card ${cardClass}`;
+                examCard.innerHTML = `
+                    <span class="exam-status ${statusClass}">${status}</span>
+                    <div class="exam-date">${formatDate(exam.date)}</div>
+                    <div class="exam-subject">${exam.subject}</div>
+                    ${gapText}
+                    <div class="countdown">
+                        <i class="fas fa-calendar-alt countdown-icon"></i>
+                        <div class="days-left">
+                            ${status === 'Completed' ? 'Completed' : 
+                              status === 'Missed' ? 'Missed this exam' :
+                              status === 'Today' ? 'Exam is today!' : 
+                              `<strong>${daysDiff}</strong> day${daysDiff !== 1 ? 's' : ''} ${exam.date > todayStr ? 'to go' : 'ago'}`}
+                        </div>
+                    </div>
+                `;
+                
+                examGrid.appendChild(examCard);
+            });
+            
+            // Update progress bar
+            const progress = (completedExams / totalExams) * 100;
+            examProgress.style.width = `${progress}%`;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+        }
+        
+        // Initialize and update every minute
+        updateUI();
+        setInterval(updateUI, 60000);
+    </script>
+</body>
+</html>
